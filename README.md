@@ -35,10 +35,10 @@ arduino-manifest [-h] [-d] [file1 file2 ... filen]
 ## Options
 
 -h
-:print help
+: print help
 
 -d
-:print debugging information
+: print debugging information
 
 ## Arguments
 
