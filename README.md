@@ -43,4 +43,4 @@ arduino-manifest [-h] [-d] [file1 file2 ... filen]
 ## Arguments
 
 file1 file2 ... filen
-:Arduino source files, usually ".ino" or ".h" files
+: Arduino source files, usually ".ino" or ".h" files
