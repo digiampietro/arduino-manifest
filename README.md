@@ -29,7 +29,7 @@ ESP8266mDNS                         1.2        multiple, see files       esp8266
 # Usage
 
 ```
-arduino-manifest [-h] [-d] [file1 file2 ... filen]
+arduino-manifest.pl [-h] [-d] [file1 file2 ... filen]
 ```
 
 ## Options
@@ -43,4 +43,5 @@ arduino-manifest [-h] [-d] [file1 file2 ... filen]
 ## Arguments
 
 file1 file2 ... filen
-: Arduino source files, usually ".ino" or ".h" files
+: Arduino source files, usually ".ino" or ".h" files. If the argument
+list is empty, it reads source files from the standard input.
