@@ -81,13 +81,16 @@ while (<F>) {
     if (/^\s*user:\s*([^\s]+)/) {
 	$userlib=$1;
 	print STDERR "userlib: $userlib\n" if ($debug);
+	$libproperty{$userlib}="user";
     }
 }
 close F;
 
 # @libpaths contain library root paths
 push @libpaths,("$userlib/libraries");
+$libproperty{"$userlib/libraries"}="user";
 push @libpaths,(expandproperty($properties{'runtime.platform.path'}) . "/libraries");
+$libproperty{expandproperty($properties{'runtime.platform.path'}) . "/libraries"}="system";
 
 # print library paths
 print STDERR "\n\n" if ($debug);
@@ -103,6 +106,7 @@ for $dir (@libpaths) {
 	    if (($file eq '.') or ($file eq '..')) { next; }
 	    if (-d "$dir/$file") {
 		push @libraries,("$dir/$file");
+		$libproperty{"$dir/$file"}=$libproperty{"$dir"};
 	    }
 	}
 	close DIR;
@@ -147,11 +151,13 @@ $prop{'name'}         ="Library Name";
 $prop{'version'}      ="Version";
 $prop{'author'}       ="Author";
 $prop{'architectures'}="Architecture";
+$prop{'libtype'}      ='Type';
 write;
 $prop{'name'}         ='-'x35;
 $prop{'version'}      ='-'x35;
 $prop{'author'}       ='-'x35;
 $prop{'architectures'}='-'x35;
+$prop{'libtype'}      ='-'x35;
 write;
 
 for $lib (@usedlib) {
@@ -168,6 +174,7 @@ for $lib (@usedlib) {
 	    }
 	}
 	close PROP;
+	$prop{'libtype'}=$libproperty{$lib};
 	write;
     } else {
 	print STDERR "  NOT EXIST: $lib/library.properties\n";
@@ -177,6 +184,6 @@ for $lib (@usedlib) {
 
 
 format STDOUT =
-@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< @<<<<<<<<< @<<<<<<<<<<<<<<<<<<<<<<<< @<<<<<<<<<<<<<<
-$prop{'name'}, $prop{'version'}, $prop{'author'}, $prop{architectures}
+@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< @<<<<<<<<< @<<<<<<<<<<<<<<<<<<<<<<<< @<<<<<<<<<<<<<< @<<<<<<
+$prop{'name'}, $prop{'version'}, $prop{'author'}, $prop{architectures}, $prop{'libtype'}
 .
