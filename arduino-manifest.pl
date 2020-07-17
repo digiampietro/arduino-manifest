@@ -6,24 +6,25 @@
 # ----------------------------------------------------------------------------
 #
 use Getopt::Std;
-getopts('hd');
+getopts('hdb:');
 
 sub usage {
-    print "usage: arduino-manifest [-h] [-d] [file1 file2 ... filen]\n";
+    print "usage: arduino-manifest [-h] [-d] -b fqbn [file1 file2 ... filen]\n";
     print "  reads arduino surce files, usually .ino and .h files, indentify #include\n";
     print "  statements and print a list of used libaries and their versions.\n";
     print "  It is not recursive, the list doesn't include nested dependencies\n";
     print "  It needs the arduino-cli installed and in the PATH, it parses the\n";
     print "  output of the arduino-cli, so changes in arduino-cli can affect this script.\n";
     print "Options\n";
-    print "  -h  print this help file\n";
-    print "  -d  print debugging information\n";
+    print "  -b  fqbn  Fully Qualified Board Name, e.g.: arduino:avr:uno\n";
+    print "  -h        print this help file\n";
+    print "  -d        print debugging information\n";
     print "Arguments\n";
     print "  file1 file2 .. filen  source input files to parse, usually *.ino and\n";
     print "                        eventually, *.h\n";
 }
 sub openproperties {
-    open F, "arduino-cli compile -b esp8266:esp8266:d1_mini --show-properties |" || die "Error executing arduino-cli \n";
+    open F, "arduino-cli compile -b $opt_b --show-properties |" || die "Error executing arduino-cli \n";
 }
 
 sub openconfig {
@@ -31,6 +32,7 @@ sub openconfig {
 }
 
 if ($opt_h) {usage; exit;}
+unless ($opt_b) {usage; exit 1;}
 if ($opt_d) {
     $debug=1;
 }
