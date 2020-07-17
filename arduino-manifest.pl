@@ -97,14 +97,16 @@ for $s (@libpaths) {
 
 # build the @libraries array with all library paths
 for $dir (@libpaths) {
-    opendir(DIR,$dir) or die $!;
-    while ($file = readdir(DIR)) {
-	if (($file eq '.') or ($file eq '..')) { next; }
-	if (-d "$dir/$file") {
-	    push @libraries,("$dir/$file");
+    if (-d $dir) {
+	opendir(DIR,$dir) or die "Error opening dir $dir: $!\n";
+	while ($file = readdir(DIR)) {
+	    if (($file eq '.') or ($file eq '..')) { next; }
+	    if (-d "$dir/$file") {
+		push @libraries,("$dir/$file");
+	    }
 	}
+	close DIR;
     }
-    close DIR;
 }
 
 # print all the libraries
@@ -157,7 +159,7 @@ for $lib (@usedlib) {
     undef @l;
     if ($processed{$lib}) { next; }
     if (-e "$lib/library.properties") {
-	open PROP,"$lib/library.properties" or die $!;
+	open PROP,"$lib/library.properties" or die "Error opening $lib/library.properties: $!\n";
 	while (<PROP>) {
 	    chomp;
 	    @l=split /\s*=\s*/;
