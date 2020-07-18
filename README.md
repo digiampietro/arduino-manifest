@@ -55,7 +55,7 @@ OneWire@2.3.5
 arduino-manifest.pl [-h] [-d] [-r] [-v] -b fqbn [file1 file2 ... filen]
 ```
 
-*Options*
+**Options**
 
 -h
 : print help
@@ -72,10 +72,10 @@ libraries
 
 -b fqbn
 : required argument, the Fully Qualified Board Name (examples
-esp8266:esp8266:d1_mini or arduino:avr:uno etc.)
+*esp8266:esp8266:d1_mini* or *arduino:avr:uno* etc.)
 
-*Arguments*
+**Arguments**
 
-file1 file2 ... filen
+*file1 file2 ... filen*
 : Arduino source files, usually ".ino" or ".h" files. If the argument
 list is empty, it reads source files from the standard input.
