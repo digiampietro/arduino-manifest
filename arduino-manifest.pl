@@ -6,10 +6,10 @@
 # ----------------------------------------------------------------------------
 #
 use Getopt::Std;
-getopts('hdb:');
+getopts('hdb:rv');
 
 sub usage {
-    print "usage: arduino-manifest [-h] [-d] -b fqbn [file1 file2 ... filen]\n";
+    print "usage: arduino-manifest [-h] [-d] [-r] [-v] -b fqbn [file1 file2 ... filen]\n";
     print "  reads arduino surce files, usually .ino and .h files, indentify #include\n";
     print "  statements and print a list of used libaries and their versions.\n";
     print "  It is not recursive, the list doesn't include nested dependencies\n";
@@ -19,6 +19,8 @@ sub usage {
     print "  -b  fqbn  Fully Qualified Board Name, e.g.: arduino:avr:uno\n";
     print "  -h        print this help file\n";
     print "  -d        print debugging information\n";
+    print "  -r        print the requirements.txt file, list only user library names\n";
+    print "  -v        include version numbers with -r option\n";
     print "Arguments\n";
     print "  file1 file2 .. filen  source input files to parse, usually *.ino and\n";
     print "                        eventually, *.h\n";
@@ -147,18 +149,20 @@ for $includef (keys %includef) {
 
 # print libraries details
 print STDERR "\nLibraries details\n" if ($debug);
-$prop{'name'}         ="Library Name";
-$prop{'version'}      ="Version";
-$prop{'author'}       ="Author";
-$prop{'architectures'}="Architecture";
-$prop{'libtype'}      ='Type';
-write;
-$prop{'name'}         ='-'x35;
-$prop{'version'}      ='-'x35;
-$prop{'author'}       ='-'x35;
-$prop{'architectures'}='-'x35;
-$prop{'libtype'}      ='-'x35;
-write;
+if (! $opt_r) {
+    $prop{'name'}         ="Library Name";
+    $prop{'version'}      ="Version";
+    $prop{'author'}       ="Author";
+    $prop{'architectures'}="Architecture";
+    $prop{'libtype'}      ='Type';
+    write;
+    $prop{'name'}         ='-'x35;
+    $prop{'version'}      ='-'x35;
+    $prop{'author'}       ='-'x35;
+    $prop{'architectures'}='-'x35;
+    $prop{'libtype'}      ='-'x35;
+    write;
+}
 
 for $lib (@usedlib) {
     undef %prop;
@@ -175,7 +179,17 @@ for $lib (@usedlib) {
 	}
 	close PROP;
 	$prop{'libtype'}=$libproperty{$lib};
-	write;
+	if (! $opt_r) {
+	    write;
+	} else {
+	    if ($prop{'libtype'} eq 'user') {
+		print "$prop{'name'}";
+		if ($opt_v) {
+		    print '@',$prop{'version'};
+		}
+		print "\n";
+	    }
+	}
     } else {
 	print STDERR "  NOT EXIST: $lib/library.properties\n";
     }
