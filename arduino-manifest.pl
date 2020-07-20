@@ -164,7 +164,7 @@ if (! $opt_r) {
     write;
 }
 
-for $lib (@usedlib) {
+for $lib (sort @usedlib) {
     undef %prop;
     undef @l;
     if ($processed{$lib}) { next; }
