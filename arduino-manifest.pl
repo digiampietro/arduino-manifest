@@ -125,9 +125,13 @@ print STDERR "\nInclude files:\n" if ($debug);
 # read '#include <...>" lines from input files
 while (<>) {
     if (/^\s*\#include\s+\<([^\>]+)/) {
-	$includef=$1;
-	print STDERR "  $includef \n" if ($debug);
-	$includef{$includef}=1;
+        # Skip the default Arduino header since it will never be a requirement.
+        if ($1 == "Arduino.h") {
+            next;
+        }
+        $includef=$1;
+        print STDERR "  $includef \n" if ($debug);
+        $includef{$includef}=1;
     }
 }
 
